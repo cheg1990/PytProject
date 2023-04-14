@@ -8,7 +8,7 @@ from collections import Counter
 import os
 
 
-def download():
+def download_file():
     url = "https://lk.globtelecom.ru/upload/test_prog1.csv"
     filename = "test_prog1.csv"
     urllib.request.urlretrieve(url, filename)
@@ -20,7 +20,7 @@ def d_encoding(filepath: str) -> str:
         return result.get('encoding')
 
 
-def right(line: str) -> bool:
+def right_tel_num(line: str) -> bool:
     pattern = r"^[0-9]+$"
     if len(line) == 11 and re.match(pattern, line) :
         return True
@@ -33,6 +33,20 @@ def current_age(dob_str: str):
     today = datetime.today()
     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
     return age
+
+def table_view(column1=0,record1=0,column2=0,record2=0):
+    if column2==0 and record2==0:
+        table = PrettyTable()
+        table.field_names = [column1]
+        table.add_row([record1])
+        print(table)
+    else:
+        table = PrettyTable()
+        table.field_names = [column1, column2]
+        table.add_row([record1, record2])
+        print(table)
+
+
 
 def stats():
     filepath = './test_prog1.csv'
@@ -57,61 +71,53 @@ def stats():
 
         duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
         num_duplicate_phones = len(duplicate_phones)
-        table_num = PrettyTable()
-        table_num.field_names = ["Количество повторяющихся номеров телефона", "Повторяющиися номера"]
-        table_num.add_row([num_duplicate_phones, duplicate_phones])
-        print(table_num)
+        table_view("Количество повторяющихся номеров телефона",num_duplicate_phones,"Повторяющиися номера", duplicate_phones)
 
         surname_counts = Counter(surnames)
-        duplicate_surnames = [surname for surname, count in surname_counts.items() if count > 1]
-        num_duplicate_surnames = len(duplicate_surnames)
         samesurname_count=0
         for surname, count in surname_counts.items():
             if count > 1:
                 samesurname_count+=count
         print(samesurname_count)
-        table_sur = PrettyTable()
-        table_sur.field_names = ["Количество однофамильцев"]
-        table_sur.add_row([samesurname_count])
-        print(table_sur)
+        table_view("Количество однофамильцев",samesurname_count)
 
         print("Статистика по годам рождения:")
-        table = PrettyTable()
-        table.field_names = ["Год", "Количество"]
         for year, count in sorted(years.items()):
             count = years[year]
-            table.add_row([year, count])
-        print(table)
+            table_view("Год",year,"Количество",count)
+
+def format(initials,tel,date_of_birth,age):
+    return f'ФИО: {initials};Телефон : {tel};Дата Рождения: {date_of_birth};Возраст на сегодня:{current_age(age)};\n'
 
 
-def read():
+def read_file():
     filepath = './test_prog1.csv'
     encoding = d_encoding(filepath)
     with open(filepath, 'r', encoding=encoding) as f:
         reader = csv.reader(f, delimiter=';')
         for i,line in enumerate(reader):
-            if right(line[0]) == False:
+            if right_tel_num(line[0]) == False:
                 wrong_string=f'{i};ИО : {line[3]};Телефон : {line[0]};\n'
                 print(wrong_string)
-            if right(line[0]) and line[7] == 'pos':
-                right_string = f'ФИО: {line[4]};Телефон : {line[0]};Дата Рождения: {line[8]};Возраст на сегодня:{current_age(line[8])};\n'
+            if right_tel_num(line[0]) and line[7] == 'pos':
+                right_string = format(line[4],line[0],line[8],line[8])
                 with open("pos_h.csv", "a", encoding=encoding) as f:
                     f.write(right_string)
-            if right(line[0]) and line[7] == 'cash':
-                right_string = f'ФИО: {line[4]};Телефон:{line[0]};Дата Рождения: {line[8]};Возраст на сегодня:{current_age(line[8])};\n'
+            if right_tel_num(line[0]) and line[7] == 'cash':
+                right_string = format(line[4],line[0],line[8],line[8])
                 with open("cash_h.csv", "a", encoding=encoding) as f:
                     f.write(right_string)
 
-def delete():
+def delete_url():
     filepath = './test_prog1.csv'
     os.remove(filepath)
 
 
 def main():
-    download()
-    read()
+    download_file()
+    read_file()
     stats()
-    delete()
+    delete_url()
 
 
 if __name__ == '__main__':
