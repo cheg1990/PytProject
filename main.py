@@ -46,51 +46,62 @@ def table_view(column1=0,record1=0,column2=0,record2=0):
         table.add_row([record1, record2])
         print(table)
 
-
-
-def stats():
+def same_phone():
     filepath = './test_prog1.csv'
     encoding = d_encoding(filepath)
     with open(filepath, 'r', encoding=encoding) as f:
         phones = []
-        surnames = []
-        years = {}
         for line in f:
             phone = line.strip().split(';')[0]
             phones.append(phone)
+        duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
+        num_duplicate_phones = len(duplicate_phones)
+        table_view("Количество повторяющихся номеров телефона", num_duplicate_phones, "Повторяющиися номера",duplicate_phones)
+
+def same_surname():
+    filepath = './test_prog1.csv'
+    encoding = d_encoding(filepath)
+    with open(filepath, 'r', encoding=encoding) as f:
+        surnames = []
+        for line in f:
             surname = line.split()[4]
             surnames.append(surname)
+        surname_counts = Counter(surnames)
+        samesurname_count = 0
+        for surname, count in surname_counts.items():
+            if count > 1:
+                samesurname_count += count
+        print(samesurname_count)
+        table_view("Количество однофамильцев", samesurname_count)
+
+def stats_ages():
+    filepath = './test_prog1.csv'
+    encoding = d_encoding(filepath)
+    with open(filepath, 'r', encoding=encoding) as f:
+        years = {}
+        for line in f:
             date_string = line.strip().split(';')[8]
             date_obj = datetime.strptime(date_string, "%d.%m.%Y")
             year = date_obj.year
-
             if year in years:
                 years[year] += 1
             else:
                 years[year] = 1
-
-        duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
-        num_duplicate_phones = len(duplicate_phones)
-        table_view("Количество повторяющихся номеров телефона",num_duplicate_phones,"Повторяющиися номера", duplicate_phones)
-
-        surname_counts = Counter(surnames)
-        samesurname_count=0
-        for surname, count in surname_counts.items():
-            if count > 1:
-                samesurname_count+=count
-        print(samesurname_count)
-        table_view("Количество однофамильцев",samesurname_count)
-
         print("Статистика по годам рождения:")
         for year, count in sorted(years.items()):
             count = years[year]
-            table_view("Год",year,"Количество",count)
+            table_view("Год", year, "Количество", count)
+
+def stats():
+    same_phone()
+    same_surname()
+    stats_ages()
 
 def format(initials,tel,date_of_birth,age):
     return f'ФИО: {initials};Телефон : {tel};Дата Рождения: {date_of_birth};Возраст на сегодня:{current_age(age)};\n'
 
 
-def read_file():
+def sort_file():
     filepath = './test_prog1.csv'
     encoding = d_encoding(filepath)
     with open(filepath, 'r', encoding=encoding) as f:
@@ -115,7 +126,7 @@ def delete_url():
 
 def main():
     download_file()
-    read_file()
+    sort_file()
     stats()
     delete_url()
 
