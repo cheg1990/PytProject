@@ -115,15 +115,15 @@ def sort_file(data): #функция сортировки по файлам
         name = cells[3]
         full_name = cells[4]
         date_of_birth = cells[8]
-        prof = cells[7]  #присваиваем значения строк к переменным
+        type_of_payment = cells[7]  #присваиваем значения строк к переменным
         number_corr=right_tel_num(tel_num)
         right_string = format(full_name, tel_num, date_of_birth, date_of_birth)
         if number_corr == False:
             wrong_string=f'{i};ИО : {name};Телефон : {tel_num};\n'
             print(wrong_string)
-        if number_corr and prof == 'pos':
+        if number_corr and type_of_payment == 'pos':
             write_in_file('pos_h.csv',right_string)
-        if number_corr and prof == 'cash':
+        if number_corr and type_of_payment == 'cash':
             write_in_file('cash_h.csv', right_string)
 
 def delete_url(): #удаление файла
