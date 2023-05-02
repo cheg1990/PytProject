@@ -5,7 +5,7 @@ from FILEHANDLER import FileHandler
 
 def main():
     loader = DataLoader() #создаем переменную типа DataLoader
-    loader.download_file('https://lk.globtelecom.ru/upload/test_prog1.csv') # при помощи метода скачиваем файл и записываем его в переменную
+    loader.download_file('https://lk.globtelecom.ru/upload/test_prog1.csv') # при помощи метода скачиваем файл,записываем его в переменную
     data=loader.read_file() # передавая переменную с файлом, раскодируем и раксодированный файл записываем в переменную
     analyzer = DataAnalyze(data) # создаем переменную типо Dataanalyze передавая раскодированный файл
     view = DataView(analyzer) # создаем переменную типа DataView , передавая переменную типа Dataanalyze

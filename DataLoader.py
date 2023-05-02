@@ -19,6 +19,7 @@ class DataLoader:
 
     def read_file(self):
         encoding = self.get_encoding()
+
         with open(self.filename, 'r', encoding=encoding) as f:
             data = f.read()
             data = [line for line in data.split('\n') if line.rstrip()]

@@ -29,6 +29,7 @@ class FileHandler:
 
             if len(fixed_tel_num) != 11:
                 wrong_string = f'{i};ИО : {name};Телефон : {fixed_tel_num};\n'
+
                 table = PrettyTable()
                 table.field_names = ['Некоректный номер телефона']
                 table.add_row([wrong_string])

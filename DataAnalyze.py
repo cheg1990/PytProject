@@ -19,7 +19,6 @@ class DataAnalyze:
 
     def get_duplicate_phone_numbers(self):
         phones = []
-
         for line in self.data:
             phone = line.strip().split(';')[0]
             phones.append(phone)
