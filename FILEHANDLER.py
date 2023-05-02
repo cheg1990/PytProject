@@ -1,4 +1,5 @@
 from DataAnalyze import DataAnalyze
+from prettytable import PrettyTable
 
 class FileHandler:
     def __init__(self, filepath):
@@ -14,10 +15,9 @@ class FileHandler:
 
     def sort_file(self, data):
         lines = '\n'.join(data)
+
         for i, line in enumerate(lines.split('\n')):
             cells = line.split(';')
-            if len(cells) < 9:
-                continue
             not_fixed_tel_num = cells[0]
             analyzer = DataAnalyze(data)
             fixed_tel_num=analyzer.clean_phone_number(not_fixed_tel_num)
@@ -26,11 +26,20 @@ class FileHandler:
             date_of_birth = cells[8]
             type_of_payment = cells[7]
             right_string = self.format(full_name,fixed_tel_num, date_of_birth, date_of_birth, data)
+
             if len(fixed_tel_num) != 11:
                 wrong_string = f'{i};ИО : {name};Телефон : {fixed_tel_num};\n'
-                print(wrong_string)
+                table = PrettyTable()
+                table.field_names = ['Некоректный номер телефона']
+                table.add_row([wrong_string])
+                print(table)
+
             if len(fixed_tel_num)==11 and type_of_payment == 'pos':
                 self.write_to_file('pos_h.csv', right_string)
+
             if len(fixed_tel_num)==11 and type_of_payment == 'cash':
                 self.write_to_file('cash_h.csv', right_string)
+
+            if len(fixed_tel_num)==11 and type_of_payment == 'cards':
+                self.write_to_file('cards_h.csv', right_string)
 

@@ -23,6 +23,7 @@ class DataView:
         age_stats = self.data_analyze.get_age_stats()
         table = PrettyTable()
         table.field_names = ['Год', 'Количество записей']
+
         for year, count in sorted(age_stats.items()):
             table.add_row([year, count])
         print(table)

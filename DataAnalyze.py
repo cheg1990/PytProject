@@ -19,9 +19,11 @@ class DataAnalyze:
 
     def get_duplicate_phone_numbers(self):
         phones = []
+
         for line in self.data:
             phone = line.strip().split(';')[0]
             phones.append(phone)
+
         duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
         return duplicate_phones
 
@@ -29,12 +31,13 @@ class DataAnalyze:
         surnames = []
         for line in self.data:
             fields = line.split(';')
-            if len(fields) >= 5:
-                full_name = fields[4].strip()
-                surname = full_name.split()[0]
+            full_name = fields[4].strip()
+            surname = full_name.split()[0]
             surnames.append(surname)
+
         surname_counts = Counter(surnames)
         samesurname_count = 0
+
         for surname, count in surname_counts.items():
             if count > 1:
                 samesurname_count += count
@@ -44,12 +47,12 @@ class DataAnalyze:
         years = {}
         for line in self.data:
             fields = line.split(';')
-            if len(fields) >= 8:
-                date_string = fields[8].strip()
-                date_obj = datetime.strptime(date_string, '%d.%m.%Y')
-                year = date_obj.year
-                if year in years:
-                    years[year] += 1
-                else:
-                    years[year] = 1
+            date_string = fields[8].strip()
+            date_obj = datetime.strptime(date_string, '%d.%m.%Y')
+            year = date_obj.year
+
+            if year in years:
+                years[year] += 1
+            else:
+                years[year] = 1
         return years

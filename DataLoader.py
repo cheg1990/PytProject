@@ -1,22 +1,28 @@
 import urllib.request
 import charset_normalizer
+import os
 
 class DataLoader:
-    def __init__(self, url):
+    def __init__(self):
+        self.url = None
+        self.filename = None
+
+    def download_file(self, url):
         self.url = url
+        self.filename = 'test_prog1.csv'
+        urllib.request.urlretrieve(self.url, self.filename)
 
-    def download_file(self):
-        urllib.request.urlretrieve(self.url, 'test_prog1.csv')
-        filename = 'test_prog1.csv'
-        return filename
-
-    def get_encoding(self, file_path):
-        with open(file_path, 'rb') as f:
+    def get_encoding(self):
+        with open(self.filename, 'rb') as f:
             result = charset_normalizer.detect(f.read())
             return result.get('encoding')
 
-    def read_file(self, file_path):
-        encoding = self.get_encoding(file_path)
-        with open(file_path, 'r', encoding=encoding) as f:
+    def read_file(self):
+        encoding = self.get_encoding()
+        with open(self.filename, 'r', encoding=encoding) as f:
             data = f.read()
-        return data.split('\n')
+            data = [line for line in data.split('\n') if line.rstrip()]
+        return data
+
+    def delete_file(self):
+        os.remove(self.filename)
