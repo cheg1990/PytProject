@@ -1,15 +1,14 @@
-import re
 from datetime import datetime
 from collections import Counter
 
 class DataAnalyze:
-    def __init__(self, data):
+    def __init__(self,data):
         self.data = data
-
-    def clean_phone_number(self, line):
-        pattern = r'\D+'
-        digits_only = re.sub(pattern, '', line)
-        return digits_only
+        self.fixed_tel_num = [line[0] for line in self.data]
+        self.initials = [line[1] for line in self.data]
+        self.fullname = [line[2] for line in self.data]
+        self.type_of_payment = [line[3] for line in self.data]
+        self.dob = [line[4] for line in self.data]
 
     def calculate_age(self, dob_str):
         dob = datetime.strptime(dob_str, '%d.%m.%Y')
@@ -19,18 +18,16 @@ class DataAnalyze:
 
     def get_duplicate_phone_numbers(self):
         phones = []
-        for line in self.data:
-            phone = line[0]
-            phones.append(phone)
+        for line in self.fixed_tel_num:
+            phones.append(line)
 
         duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
         return duplicate_phones
 
     def get_same_surname_count(self):
         surnames = []
-        for line in self.data:
-            full_name = line[2]
-            surname = full_name.split()[0]
+        for line in self.fullname:
+            surname = line.split()[0]
             surnames.append(surname)
 
         surname_counts = Counter(surnames)
@@ -43,9 +40,8 @@ class DataAnalyze:
 
     def get_age_stats(self):
         years = {}
-        for line in self.data:
-            date_string = line[4]
-            date_obj = datetime.strptime(date_string, '%d.%m.%Y')
+        for line in self.dob:
+            date_obj = datetime.strptime(line, '%d.%m.%Y')
             year = date_obj.year
 
             if year in years:
