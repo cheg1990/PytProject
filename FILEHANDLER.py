@@ -3,10 +3,10 @@ from prettytable import PrettyTable
 
 class FileHandler:
     def __init__(self,data):
-        self.__data = data
+        self.data = data
 
     def format(self, initials, tel, date_of_birth, age):
-        analyzer = DataAnalyze(self.__data)
+        analyzer = DataAnalyze(self.data)
         return f'ФИО: {initials};Телефон : {tel};Дата Рождения: {date_of_birth};Возраст на сегодня:{analyzer.calculate_age(age)};\n'
 
     def write_to_file(self, name_of_file, string_to_write):
@@ -17,9 +17,9 @@ class FileHandler:
         wrong_numbers = '' # понадобились переменные, чтобы вывести некоректные номера в таблицы, и нужны они за циклом
         count_of_wrong_numbers = 0
 
-        for row in self.__data:
+        for row in self.data:
             not_fixed_tel_num = row[0]
-            analyzer = DataAnalyze(self.__data)
+            analyzer = DataAnalyze(self.data)
             fixed_tel_num = analyzer.clean_phone_number(not_fixed_tel_num)
             name = row[1]
             full_name = row[2]
