@@ -20,7 +20,7 @@ class DataAnalyze:
     def get_duplicate_phone_numbers(self):
         phones = []
         for line in self.data:
-            phone = line.strip().split(';')[0]
+            phone = line[0]
             phones.append(phone)
 
         duplicate_phones = set([phone for phone in phones if phones.count(phone) > 1])
@@ -29,8 +29,7 @@ class DataAnalyze:
     def get_same_surname_count(self):
         surnames = []
         for line in self.data:
-            fields = line.split(';')
-            full_name = fields[4].strip()
+            full_name = line[2]
             surname = full_name.split()[0]
             surnames.append(surname)
 
@@ -45,8 +44,7 @@ class DataAnalyze:
     def get_age_stats(self):
         years = {}
         for line in self.data:
-            fields = line.split(';')
-            date_string = fields[8].strip()
+            date_string = line[4]
             date_obj = datetime.strptime(date_string, '%d.%m.%Y')
             year = date_obj.year
 

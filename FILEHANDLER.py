@@ -2,45 +2,46 @@ from DataAnalyze import DataAnalyze
 from prettytable import PrettyTable
 
 class FileHandler:
-    def __init__(self, filepath):
-        self.filepath = filepath
+    def __init__(self,data):
+        self.__data = data
 
-    def format(self,initials, tel, date_of_birth, age, data):  # функция для формата записи в файл
-        analyzer = DataAnalyze(data)
+    def format(self, initials, tel, date_of_birth, age):
+        analyzer = DataAnalyze(self.__data)
         return f'ФИО: {initials};Телефон : {tel};Дата Рождения: {date_of_birth};Возраст на сегодня:{analyzer.calculate_age(age)};\n'
 
     def write_to_file(self, name_of_file, string_to_write):
         with open(name_of_file, 'a', encoding='utf-8') as f:
             f.write(string_to_write)
 
-    def sort_file(self, data):
-        lines = '\n'.join(data)
+    def sort_file(self):
+        wrong_numbers = '' # понадобились переменные, чтобы вывести некоректные номера в таблицы, и нужны они за циклом
+        count_of_wrong_numbers = 0
 
-        for i, line in enumerate(lines.split('\n')):
-            cells = line.split(';')
-            not_fixed_tel_num = cells[0]
-            analyzer = DataAnalyze(data)
-            fixed_tel_num=analyzer.clean_phone_number(not_fixed_tel_num)
-            name = cells[3]
-            full_name = cells[4]
-            date_of_birth = cells[8]
-            type_of_payment = cells[7]
-            right_string = self.format(full_name,fixed_tel_num, date_of_birth, date_of_birth, data)
+        for row in self.__data:
+            not_fixed_tel_num = row[0]
+            analyzer = DataAnalyze(self.__data)
+            fixed_tel_num = analyzer.clean_phone_number(not_fixed_tel_num)
+            name = row[1]
+            full_name = row[2]
+            type_of_payment = row[3]
+            date_of_birth = row[4] # берем с кортежа данные и приравниваем к переменным
+            right_string = self.format(full_name, fixed_tel_num, date_of_birth, date_of_birth)
 
-            if len(fixed_tel_num) != 11:
-                wrong_string = f'{i};ИО : {name};Телефон : {fixed_tel_num};\n'
-
-                table = PrettyTable()
-                table.field_names = ['Некоректный номер телефона']
-                table.add_row([wrong_string])
-                print(table)
-
-            if len(fixed_tel_num)==11 and type_of_payment == 'pos':
+            if len(fixed_tel_num) == 11 and type_of_payment == 'pos':
                 self.write_to_file('pos_h.csv', right_string)
 
-            if len(fixed_tel_num)==11 and type_of_payment == 'cash':
+            if len(fixed_tel_num) == 11 and type_of_payment == 'cash':
                 self.write_to_file('cash_h.csv', right_string)
 
-            if len(fixed_tel_num)==11 and type_of_payment == 'cards':
+            if len(fixed_tel_num) == 11 and type_of_payment == 'cards':
                 self.write_to_file('cards_h.csv', right_string)
 
+            if len(fixed_tel_num) != 11:
+                wrong_numbers += f'{name} {fixed_tel_num}\n'
+                count_of_wrong_numbers +=1 # записываем в переменную все некорректные номера и ведем их подсчет
+
+        if count_of_wrong_numbers > 0: # выводим их в таблицу
+            table = PrettyTable()
+            table.field_names = ['Некоректные номера телефонов']
+            table.add_row([wrong_numbers])
+            print(table)
