@@ -20,16 +20,10 @@ class FileHandler(DataAnalyze):
             phone_len = len(fixed_tel_num)
             right_string = f'ФИО: {full_name}; Телефон: {fixed_tel_num} ; Дата Рождения: {dob}; Возраст на сегодня: {super().calculate_age(dob)}\n'
 
-            if phone_len == 11 and type_of_payment == 'pos':
-                self.write_to_file('pos_h.csv', right_string)
+            if phone_len == 11:
+                self.write_to_file( f"{type_of_payment}_h.csv", right_string)
 
-            elif phone_len == 11 and type_of_payment == 'cash':
-                self.write_to_file('cash_h.csv', right_string)
-
-            elif phone_len == 11 and type_of_payment == 'cards':
-                self.write_to_file('cards_h.csv', right_string)
-
-            elif phone_len != 11:
+            else:
                 wrong_numbers += f'{full_name} {fixed_tel_num}\n'
                 count_of_wrong_numbers += 1
 
