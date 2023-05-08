@@ -12,7 +12,7 @@ def main():
     view = DataView(analyzer) # создаем объект класса DataView и передаем объект класс DataAnalyze
     view.show_duplicate_phone_numbers()
     view.show_same_surname_count()
-    view.show_age_stats() # выводим статистику
+    view.show_age_stats() # выводим статистик
     file_handler = FileHandler(data) # создаем объект класса FileHandler
     file_handler.sort_file() # записываем информацию в файл
     loader.delete_file() # удаляю файл

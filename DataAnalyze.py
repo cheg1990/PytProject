@@ -38,6 +38,7 @@ class DataAnalyze:
                 samesurname_count += count
         return samesurname_count
 
+
     def get_age_stats(self):
         years = {}
         for line in self.dob:

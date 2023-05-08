@@ -18,7 +18,7 @@ class FileHandler(DataAnalyze):
             dob = self.dob[index]
             full_name = self.initials[index]
             phone_len = len(fixed_tel_num)
-            right_string = f'ФИО: {full_name}; Телефон: {fixed_tel_num}; Дата Рождения: {dob}; Возраст на сегодня: {super().calculate_age(dob)}\n'
+            right_string = f'ФИО: {full_name}; Телефон: {fixed_tel_num} ; Дата Рождения: {dob}; Возраст на сегодня: {super().calculate_age(dob)}\n'
 
             if phone_len == 11 and type_of_payment == 'pos':
                 self.write_to_file('pos_h.csv', right_string)

@@ -15,6 +15,7 @@ class DataLoader:
         urllib.request.urlretrieve(self.url, self.filename)
 
 
+
     def get_encoding(self):
         with open(self.filename, 'rb') as f:
             result = charset_normalizer.detect(f.read())
